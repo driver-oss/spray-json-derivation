@@ -1,0 +1,27 @@
+#!/bin/bash
+set -ev
+
+sbt scalafmtTest +test
+
+# Automatic publishing for tags that start with `v<digit>`
+if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
+    # Setup gpg keys
+    gpg --keyserver keyserver.ubuntu.com --recv-key "DC7751D77486D755815C04AB488F99C904F077E8"
+    openssl aes-256-cbc -K "$encrypted_c6e2aee6c53f_key" -iv "$encrypted_c6e2aee6c53f_iv" -in .ci/sec.gpg.enc -out sec.gpg -d
+    gpg --import sec.gpg
+
+    # Set up publishing settings and credentials
+    cat <<EOF > credentials.sbt
+    useGpg := true
+    pgpSigningKey := Some(0x488F99C904F077E8l)
+    credentials += Credentials(
+      "Sonatype Nexus Repository Manager",
+      "oss.sonatype.org",
+      "vZKBpUCV",
+      "$SONATYPE_PASS"
+    )
+EOF
+
+    # Publish and release
+    sbt +publishSigned sonatypeRelease
+fi

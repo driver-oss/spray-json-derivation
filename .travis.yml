@@ -1,0 +1,19 @@
+language: scala
+
+jdk:
+  - oraclejdk8 # this should be changed to openjdk as soon as it becomes available on Travis CI
+
+env:
+  - secure: "KuhZl6+JNGag+CUHkbmbN8cnZ09fn+B8wVb8ZKG+z+RrofTkwCOfnCNpC6PZb8ZPP+1YkM9oxfo6xah22e4XE2Viu17GQeFRG56C2Pe/XEpaNLfxitu3c2rx2+3GVlYHKCEb0s1ZLkV7gtJcO5PHgtH6fXJ9FqEqQ/5bOLo6xduhytNwIxoLseZn3581yF4dAYtOxm9ebj9mbFMqx/twdYLvEVu+ePIrqACwZUNcpR9dQxEPxQs7CVkwTnMzGMxkPGe1RoFPyhPIPhY8X6mW4Gc75riY9aFoI6gFvyyrAjOPoC7zwZyqSZSzxjkFAxXtpsHhkA05GeLvw1wLh2FOHxFwR5WU92DgvF1slQ4b4XDXxXjLlCJo3g98WtshFspXvdalrNKQJ92CroNtLusbkVfv1N8cILgA7kkCAVN7L+l76duiXwAunUI0poOMO+oBEU4NcHe4de4Ef9dmXTPU/kFyAYZsPHkRH/fcJEuEex3haFzvRv9g/OvKleXvprVJhMYC2zsagW2c8h1gjBT2P5DUNB6V6jV5XprN4ATbIwpJBlGGOxZ/6gspVKc2m6exq0DN0mmx160BMwR1wHvYbCUEY5hMrg5e4x9KmVIF8BQd4v0dvihRpYCkz2RfAk6viSJjsAAyOUswfY2AcONbBjYDvCFsKiSQGJHS+RJjZ2M="
+
+script: .ci/build
+
+cache:
+  directories:
+    - "$HOME/.ivy2/cache"
+    - "$HOME/.sbt/boot/"
+
+before_cache:
+  - find $HOME/.ivy2/cache/xyz.driver -depth -name "tracing*" -exec rm -r {} \;
+  - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
+  - find $HOME/.sbt -name "*.lock" -delete
