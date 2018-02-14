@@ -38,7 +38,7 @@ trait DerivedFormats { self: BasicFormats =>
 
   def dispatch[T](ctx: SealedTrait[JsonFormat, T]): JsonFormat[T] = {
     val typeFieldName = ctx.annotations
-      .collectFirst{
+      .collectFirst {
         case g: gadt => g.typeFieldName
       }
       .getOrElse("type")
@@ -74,7 +74,7 @@ trait DerivedFormats { self: BasicFormats =>
                 s"because type '${typeName}' is unsupported.")
         }
       }
-    }   
+    }
   }
 
   implicit def gen[T]: JsonFormat[T] = macro Magnolia.gen[T]

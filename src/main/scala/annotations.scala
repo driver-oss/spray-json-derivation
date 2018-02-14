@@ -20,5 +20,4 @@ import scala.annotation.StaticAnnotation
   *
   * @param typeFieldName the name of the field to inject into a serialized JSON
   *        object */
-final class gadt(val typeFieldName: String = "type")
-    extends StaticAnnotation
+final class gadt(val typeFieldName: String = "type") extends StaticAnnotation
