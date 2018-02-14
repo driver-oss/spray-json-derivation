@@ -1,3 +1,5 @@
+# Notice of work-in-progess: this project currently requires an unreleased version of Magnolia to compile
+
 [![Build Status](https://travis-ci.org/drivergroup/spray-json-derivation.svg?branch=master)](https://travis-ci.org/drivergroup/spray-json-derivation)
 [![Download](https://img.shields.io/maven-central/v/xyz.driver/spray-json-derivation_2.12.svg)](http://search.maven.org/#search|ga|1|xyz.driver%20spray-json-derivation-)
 
@@ -5,7 +7,7 @@
 
 This library provides automatic spray JsonFormats for any `case class` and children of `sealed trait`s.
 
-It uses the [Magnolia](http://magnolia.work/) ([source code](https://github.com/propensive/magnolia)) type-derivation library to implicitly generate JSON formats for any product type. Magnolia integrates with spray so seamlessly that it is almost not worth the effort to publish this project as a full fledged repository; a single gist with the contents of [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) would provide almost all functionality.
+It uses the [Magnolia](http://magnolia.work/) ([source code](https://github.com/propensive/magnolia)) type-derivation library to implicitly generate JSON formats for any product type. Magnolia integrates with spray so seamlessly that it is almost not worth the effort to publish this project as a full fledged repository; a single gist with the contents of [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) would demonstrate almost all functionality.
 
 ## Getting Started
 
@@ -20,7 +22,7 @@ libraryDependencies += "xyz.driver" %% "spray-json-derivation" % "<latest versio
 Define some case classes and mix `DerivedFormats` into your JSON
 protocol stack. That's it.
 
-```
+```scala
 import spray.json._
 import xyz.driver.json.DerivedFormats
 
@@ -38,7 +40,7 @@ object Main extends App with DefaultJsonProtocol with DerivedFormats {
 ## Documentation
 Check out the main file
 [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) and the
-test suite for a complete overview of the project.
+[test suite](src/test/scala/ProductTypeFormats.scala) for a complete overview of the project.
 
 ## Copying
 Copyright 2018 Driver Inc.
