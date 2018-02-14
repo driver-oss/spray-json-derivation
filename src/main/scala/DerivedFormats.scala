@@ -5,6 +5,8 @@ import spray.json._
 
 import scala.language.experimental.macros
 
+/** Mixin that enables automatic derivation of JSON formats for any product
+  * (case classes) or coproduct (sealed traits) types. */
 trait DerivedFormats { self: BasicFormats =>
   type Typeclass[T] = JsonFormat[T]
 

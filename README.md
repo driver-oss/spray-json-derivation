@@ -28,19 +28,50 @@ import xyz.driver.json.DerivedFormats
 
 object Main extends App with DefaultJsonProtocol with DerivedFormats {
   
+  // Simple case classes
+
   case class A(x: Int)
   case class B(a: A, str: String)
-  
+
   println(B(A(42), "hello world").toJson.prettyPrint)
+  // {
+  //   "a": {
+  //     "x": 42
+  //   },
+  //   "str": "hello world"
+  // }
+
+
+  // Sealed traits
+
+  sealed trait X
+  case class Y(x: Int) extends X
+  case class Z(y: Y, str: String) extends X
+
+  println(Seq[X](Z(Y(42), "foo"), Y(2)).toJson.prettyPrint)
+  // [{
+  //   "type": "Z",
+  //   "y": {
+  //     "x": 42
+  //   },
+  //   "str": "foo"
+  // }, {
+  //   "type": "Y",
+  //   "x": 2
+  // }]
 
 }
 ```
 
-
 ## Documentation
 Check out the main file
 [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) and the
-[test suite](src/test/scala/ProductTypeFormats.scala) for a complete overview of the project.
+[test suite](src/test/scala/ProductTypeFormats.scala) for a complete
+overview of the project.
+
+## Development
+This project uses sbt. It is set up to auto-release when a tag is
+pushed to the main repository.
 
 ## Copying
 Copyright 2018 Driver Inc.

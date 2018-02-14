@@ -14,6 +14,6 @@ cache:
     - "$HOME/.sbt/boot/"
 
 before_cache:
-  - find $HOME/.ivy2/cache/xyz.driver -depth -name "tracing*" -exec rm -r {} \;
+  - find $HOME/.ivy2/cache/xyz.driver -depth -name "spray-json-derivation*" -exec rm -r {} \;
   - find $HOME/.ivy2 -name "ivydata-*.properties" -delete
   - find $HOME/.sbt -name "*.lock" -delete
