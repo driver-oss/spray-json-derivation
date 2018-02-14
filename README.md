@@ -9,7 +9,7 @@ This library provides automatic spray JsonFormats for any `case class`
 and children of `sealed trait`s.
 
 It uses the [Magnolia](http://magnolia.work/) ([source
-code](https://github.com/propensive/magnolia)) type-derivation library
+code](https://github.com/propensive/magnolia)) typeclass derivation library
 to implicitly generate JSON formats for any product type. Magnolia
 integrates with spray so seamlessly that it is almost not worth the
 effort to publish this project as a full fledged repository; a single
