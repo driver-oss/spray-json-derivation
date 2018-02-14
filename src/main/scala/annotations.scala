@@ -2,9 +2,6 @@ package xyz.driver.json
 
 import scala.annotation.StaticAnnotation
 
-/** Indicator trait of anontations related to JSON formatting. */
-sealed trait JsonAnnotation
-
 /** An annotation that designates that a sealed trait is a generalized algebraic
   * datatype (GADT), and that a type field containing the serialized childrens'
   * types should be added to the final JSON objects.
@@ -25,9 +22,3 @@ sealed trait JsonAnnotation
   *        object */
 final class gadt(val typeFieldName: String = "type")
     extends StaticAnnotation
-    with JsonAnnotation
-
-/** An annotation that designates that a sealed trait is an enumeration (all
-  * children are strictly case objects), and that all children should be
-  * serialized as strings. */
-final class enum extends StaticAnnotation with JsonAnnotation

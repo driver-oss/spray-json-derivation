@@ -5,9 +5,17 @@
 
 # Spray JSON Format Derivation
 
-This library provides automatic spray JsonFormats for any `case class` and children of `sealed trait`s.
+This library provides automatic spray JsonFormats for any `case class`
+and children of `sealed trait`s.
 
-It uses the [Magnolia](http://magnolia.work/) ([source code](https://github.com/propensive/magnolia)) type-derivation library to implicitly generate JSON formats for any product type. Magnolia integrates with spray so seamlessly that it is almost not worth the effort to publish this project as a full fledged repository; a single gist with the contents of [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) would demonstrate almost all functionality.
+It uses the [Magnolia](http://magnolia.work/) ([source
+code](https://github.com/propensive/magnolia)) type-derivation library
+to implicitly generate JSON formats for any product type. Magnolia
+integrates with spray so seamlessly that it is almost not worth the
+effort to publish this project as a full fledged repository; a single
+gist with the contents of
+[DerivedFormats.scala](src/main/scala/DerivedFormats.scala) would
+demonstrate almost all functionality.
 
 ## Getting Started
 

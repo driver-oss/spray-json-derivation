@@ -31,10 +31,10 @@ class CoproductTypeFormats
     """{"type":"Plus","lhs":{"type":"Value","x":42},"rhs":{"type":"Value","x":0}}"""
   )
 
-  // "Case object child" should behave like checkCoherence[Expr](
-  //   One,
-  //   """{"type":"One"}"""
-  // )
+  "Case object child" should behave like checkCoherence[Expr](
+    One,
+    """"One""""
+  )
 
   @gadt("kind")
   sealed abstract class Keyword(`type`: String)
@@ -45,7 +45,6 @@ class CoproductTypeFormats
     """{"kind":"If","type":"class"}"""
   )
 
-  @enum
   sealed trait Enum
   case object A extends Enum
   case object B extends Enum

@@ -27,7 +27,7 @@ trait DerivedFormats { self: BasicFormats =>
           ctx.construct { param =>
             param.typeclass.read(obj.fields(param.label))
           }
-        case str: JsString if ctx.isObject && str.value == ctx.typeName.short =>
+        case JsString(str) if ctx.isObject && str == ctx.typeName.short =>
           ctx.rawConstruct(Seq.empty)
 
         case js =>
@@ -36,64 +36,46 @@ trait DerivedFormats { self: BasicFormats =>
       }
     }
 
-  def dispatch[T](ctx: SealedTrait[JsonFormat, T]): JsonFormat[T] =
+  def dispatch[T](ctx: SealedTrait[JsonFormat, T]): JsonFormat[T] = {
+    val typeFieldName = ctx.annotations
+      .collectFirst{
+        case g: gadt => g.typeFieldName
+      }
+      .getOrElse("type")
+
     new JsonFormat[T] {
-      def tpe =
-        ctx.annotations
-          .find(_.isInstanceOf[JsonAnnotation])
-          .getOrElse(new gadt("type"))
-
-      override def write(value: T): JsValue = tpe match {
-        case _: enum =>
-          ctx.dispatch(value) { sub =>
-            JsString(sub.typeName.short)
-          }
-
-        case g: gadt =>
-          ctx.dispatch(value) { sub =>
-            val obj = sub.typeclass.write(sub.cast(value)).asJsObject
+      override def write(value: T): JsValue = ctx.dispatch(value) { sub =>
+        sub.typeclass.write(sub.cast(value)) match {
+          case obj: JsObject =>
             JsObject(
-              (Map(g.typeFieldName -> JsString(sub.typeName.short)) ++
+              (Map(typeFieldName -> JsString(sub.typeName.short)) ++
                 obj.fields).toSeq: _*)
-          }
+          case js => js
+        }
       }
 
-      override def read(value: JsValue): T = tpe match {
-        case _: enum =>
-          value match {
-            case str: JsString =>
-              ctx.subtypes
-                .find(_.typeName.short == str.value)
-                .getOrElse(deserializationError(
-                  s"Cannot deserialize JSON to ${ctx.typeName.full} because " +
-                    "type '${str}' has an unsupported value."))
-                .typeclass
-                .read(str)
-            case js =>
-              deserializationError(
-                s"Cannot read JSON '$js' as a ${ctx.typeName.full}")
-          }
+      override def read(js: JsValue): T = {
+        val typeName: String = js match {
+          case obj: JsObject if obj.fields.contains(typeFieldName) =>
+            obj.fields(typeFieldName).convertTo[String]
+          case JsString(str) =>
+            str
+          case _ =>
+            deserializationError(
+              s"Cannot deserialize JSON to ${ctx.typeName.full} " +
+                "because serialized type cannot be determined.")
+        }
 
-        case g: gadt =>
-          value match {
-            case obj: JsObject if obj.fields.contains(g.typeFieldName) =>
-              val fieldName = obj.fields(g.typeFieldName).convertTo[String]
-
-              ctx.subtypes.find(_.typeName.short == fieldName) match {
-                case Some(tpe) => tpe.typeclass.read(obj)
-                case None =>
-                  deserializationError(
-                    s"Cannot deserialize JSON to ${ctx.typeName.full} " +
-                      s"because type field '${fieldName}' has an unsupported " +
-                      "value.")
-              }
-
-            case js =>
-              deserializationError(
-                s"Cannot read JSON '$js' as a ${ctx.typeName}")
-          }
+        ctx.subtypes.find(_.typeName.short == typeName) match {
+          case Some(tpe) => tpe.typeclass.read(js)
+          case None =>
+            deserializationError(
+              s"Cannot deserialize JSON to ${ctx.typeName.full} " +
+                s"because type '${typeName}' is unsupported.")
+        }
       }
-    }
+    }   
+  }
 
   implicit def gen[T]: JsonFormat[T] = macro Magnolia.gen[T]
 
