@@ -1,5 +1,4 @@
 name := "spray-json-derivation"
-organization := "xyz.driver"
 
 version in ThisBuild := {
   import sys.process._
