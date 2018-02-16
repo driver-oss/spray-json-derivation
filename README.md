@@ -1,5 +1,3 @@
-# Notice of work-in-progess: this project currently requires an unreleased version of Magnolia to compile
-
 [![Build Status](https://travis-ci.org/drivergroup/spray-json-derivation.svg?branch=master)](https://travis-ci.org/drivergroup/spray-json-derivation)
 [![Download](https://img.shields.io/maven-central/v/xyz.driver/spray-json-derivation_2.12.svg)](http://search.maven.org/#search|ga|1|xyz.driver%20spray-json-derivation-)
 
