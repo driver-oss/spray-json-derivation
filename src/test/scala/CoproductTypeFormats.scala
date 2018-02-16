@@ -27,8 +27,8 @@ class CoproductTypeFormats
   )
 
   "Nested parameter case class child" should behave like checkCoherence[Expr](
-    Plus(Value(42), Value(0)),
-    """{"type":"Plus","lhs":{"type":"Value","x":42},"rhs":{"type":"Value","x":0}}"""
+    Plus(Value(42), One),
+    """{"type":"Plus","lhs":{"type":"Value","x":42},"rhs":"One"}"""
   )
 
   "Case object child" should behave like checkCoherence[Expr](
@@ -53,5 +53,10 @@ class CoproductTypeFormats
     A :: B :: Nil,
     """["A", "B"]"""
   )
+
+  "Serializing as sealed trait an deserializing as child" should "work" in {
+    val expr: Expr = Plus(Value(42), Plus(Zero(), One))
+    assert(expr.toJson.convertTo[Plus] == expr)
+  }
 
 }
