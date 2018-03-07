@@ -11,13 +11,12 @@ import scala.annotation.StaticAnnotation
   * field and is really only useful if a child itself has a field called `type`
   * that would result in a conflict.
   *
-  * Example
-  * ```
+  * Example:
+  * {{{
   * // the JSON field "kind" will contain the actual type of the serialized child
   * @gadt("kind") sealed abstract class Keyword(`type`: String)
   * case class If(`type`: String) extends Keyword(`type`)
-  * ```
-  *
+  * }}}
   * @param typeFieldName the name of the field to inject into a serialized JSON
   *        object */
 final class gadt(val typeFieldName: String = "type") extends StaticAnnotation
