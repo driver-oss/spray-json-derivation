@@ -31,16 +31,16 @@ class ProductTypeFormats
 
   "Case object" should behave like checkCoherence(
     D,
-    """"D""""
+    "{}"
   )
 
   "Case object as parameter" should behave like checkCoherence(
     E(D),
-    """{"d":"D"}"""
+    """{"d":{}}"""
   )
 
   // custom format for F, that inverts the value of parameter x
-  implicit val fFormat: JsonFormat[F] = new JsonFormat[F] {
+  implicit val fFormat: RootJsonFormat[F] = new RootJsonFormat[F] {
     override def write(f: F): JsValue = JsObject("x" -> JsNumber(-f.x))
     override def read(js: JsValue): F =
       F(-js.asJsObject.fields("x").convertTo[Int])

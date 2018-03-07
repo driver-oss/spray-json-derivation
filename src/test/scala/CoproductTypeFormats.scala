@@ -28,12 +28,12 @@ class CoproductTypeFormats
 
   "Nested parameter case class child" should behave like checkCoherence[Expr](
     Plus(Value(42), One),
-    """{"type":"Plus","lhs":{"type":"Value","x":42},"rhs":"One"}"""
+    """{"type":"Plus","lhs":{"type":"Value","x":42},"rhs":{"type":"One"}}"""
   )
 
   "Case object child" should behave like checkCoherence[Expr](
     One,
-    """"One""""
+    """{"type": "One"}"""
   )
 
   @gadt("kind")
@@ -45,13 +45,23 @@ class CoproductTypeFormats
     """{"kind":"If","type":"class"}"""
   )
 
+  @gadt("""_`crazy type!`"""")
+  sealed abstract trait Crazy
+  case class CrazyType() extends Crazy
+
+  "GADT with special characters in type field" should behave like checkCoherence[
+    Crazy](
+    CrazyType(),
+    """{"_`crazy type!`\"": "CrazyType"}"""
+  )
+
   sealed trait Enum
   case object A extends Enum
   case object B extends Enum
 
   "Enum" should behave like checkCoherence[List[Enum]](
     A :: B :: Nil,
-    """["A", "B"]"""
+    """[{"type":"A"}, {"type":"B"}]"""
   )
 
   "Serializing as sealed trait an deserializing as child" should "work" in {

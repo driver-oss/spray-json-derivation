@@ -12,24 +12,22 @@ trait DerivedFormats { self: BasicFormats =>
 
   def combine[T](ctx: CaseClass[JsonFormat, T]): JsonFormat[T] =
     new JsonFormat[T] {
-      override def write(value: T): JsValue =
-        if (ctx.isObject) {
-          JsString(ctx.typeName.short)
-        } else {
-          val fields: Seq[(String, JsValue)] = ctx.parameters.map { param =>
-            param.label -> param.typeclass.write(param.dereference(value))
-          }
-          JsObject(fields: _*)
+      override def write(value: T): JsValue = {
+        val fields: Seq[(String, JsValue)] = ctx.parameters.map { param =>
+          param.label -> param.typeclass.write(param.dereference(value))
         }
+        JsObject(fields: _*)
+      }
 
       override def read(value: JsValue): T = value match {
         case obj: JsObject =>
-          ctx.construct { param =>
-            param.typeclass.read(obj.fields(param.label))
+          if (ctx.isObject) {
+            ctx.rawConstruct(Seq.empty)
+          } else {
+            ctx.construct { param =>
+              param.typeclass.read(obj.fields(param.label))
+            }
           }
-        case JsString(str) if ctx.isObject && str == ctx.typeName.short =>
-          ctx.rawConstruct(Seq.empty)
-
         case js =>
           deserializationError(
             s"Cannot read JSON '$js' as a ${ctx.typeName.full}")
@@ -77,8 +75,28 @@ trait DerivedFormats { self: BasicFormats =>
     }
   }
 
-  implicit def gen[T]: JsonFormat[T] = macro Magnolia.gen[T]
+  implicit def derivedFormat[T]: RootJsonFormat[T] =
+    macro DerivedFormatHelper.derivedFormat[T]
 
 }
 
 object DerivedFormats extends DerivedFormats with BasicFormats
+
+object DerivedFormatHelper {
+  import scala.reflect.macros.whitebox._
+
+  /** Utility that converts a magnolia-generated JsonFormat to a RootJsonFormat. */
+  def derivedFormat[T: c.WeakTypeTag](c: Context): c.Tree = {
+    import c.universe._
+    val tpe = weakTypeOf[T].typeSymbol.asType
+    val sprayPkg = c.mirror.staticPackage("spray.json")
+    val valName = TermName(c.freshName("format"))
+    q"""{
+      val $valName = ${Magnolia.gen[T](c)}
+      new $sprayPkg.RootJsonFormat[$tpe] {
+        def write(value: $tpe) = $valName.write(value)
+        def read(value: $sprayPkg.JsValue) = $valName.read(value)
+      }
+    }"""
+  }
+}

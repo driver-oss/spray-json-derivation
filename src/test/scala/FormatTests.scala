@@ -5,7 +5,7 @@ import org.scalatest._
 
 trait FormatTests { self: FlatSpec =>
 
-  def checkCoherence[A: JsonFormat](a: A, expectedJson: String) = {
+  def checkCoherence[A: RootJsonFormat](a: A, expectedJson: String) = {
     it should "serialize to the expected JSON value" in {
       val expected: JsValue = expectedJson.parseJson
       assert(a.toJson == expected)
