@@ -16,22 +16,22 @@ class CoproductTypeFormats
   case class Plus(lhs: Expr, rhs: Expr) extends Expr
   case object One extends Expr
 
-  "No-parameter case class child" should behave like checkCoherence[Expr](
+  "No-parameter case class child" should behave like checkRoundtrip[Expr](
     Zero(),
     """{"type":"Zero"}"""
   )
 
-  "Simple parameter case class child" should behave like checkCoherence[Expr](
+  "Simple parameter case class child" should behave like checkRoundtrip[Expr](
     Value(42),
     """{"type":"Value","x":42}"""
   )
 
-  "Nested parameter case class child" should behave like checkCoherence[Expr](
+  "Nested parameter case class child" should behave like checkRoundtrip[Expr](
     Plus(Value(42), One),
     """{"type":"Plus","lhs":{"type":"Value","x":42},"rhs":{"type":"One"}}"""
   )
 
-  "Case object child" should behave like checkCoherence[Expr](
+  "Case object child" should behave like checkRoundtrip[Expr](
     One,
     """{"type": "One"}"""
   )
@@ -40,7 +40,7 @@ class CoproductTypeFormats
   sealed abstract class Keyword(`type`: String)
   case class If(`type`: String) extends Keyword(`type`)
 
-  "GADT with type field alias" should behave like checkCoherence[Keyword](
+  "GADT with type field alias" should behave like checkRoundtrip[Keyword](
     If("class"),
     """{"kind":"If","type":"class"}"""
   )
@@ -49,7 +49,7 @@ class CoproductTypeFormats
   sealed abstract trait Crazy
   case class CrazyType() extends Crazy
 
-  "GADT with special characters in type field" should behave like checkCoherence[
+  "GADT with special characters in type field" should behave like checkRoundtrip[
     Crazy](
     CrazyType(),
     """{"_`crazy type!`\"": "CrazyType"}"""
@@ -59,7 +59,7 @@ class CoproductTypeFormats
   case object A extends Enum
   case object B extends Enum
 
-  "Enum" should behave like checkCoherence[List[Enum]](
+  "Enum" should behave like checkRoundtrip[List[Enum]](
     A :: B :: Nil,
     """[{"type":"A"}, {"type":"B"}]"""
   )
