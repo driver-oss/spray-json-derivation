@@ -20,7 +20,7 @@ scmInfo := Some(
 
 developers := List(
   Developer(
-    id = "jakob@driver.xyz",
+    id = "jodersky",
     name = "Jakob Odersky",
     email = "jakob@driver.xyz",
     url = url("https://driver.xyz")

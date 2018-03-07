@@ -5,7 +5,15 @@ version in ThisBuild := {
   ("git describe --always --dirty=-SNAPSHOT --match v[0-9].*" !!).tail.trim
 }
 
-scalaVersion := "2.12.4"
+crossScalaVersions := "2.12.4" :: "2.11.12" :: Nil
+scalaVersion := crossScalaVersions.value.head
+
+scalacOptions ++= Seq(
+  "-feature",
+  "-deprecation",
+  "-Xlint",
+  "-Xfatal-warnings"
+)
 
 libraryDependencies ++= Seq(
   "io.spray" %% "spray-json" % "1.3.4",
