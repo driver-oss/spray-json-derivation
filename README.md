@@ -12,15 +12,15 @@ It uses the [Magnolia](http://magnolia.work/) ([source
 code](https://github.com/propensive/magnolia)) typeclass derivation
 library to implicitly generate JSON formats for any product
 type. Magnolia integrates with spray seamlessly, to such a point that
-a single contents of
+the contents of
 [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) provide
 almost all functionality.
 
 ## Getting Started
 
 Spray JSON Format Derivation is published to maven central as a Scala
-library (for Scala version 2.12 and 2.11, support for ScalaJS
-and Scala Native is pending). Include it in sbt by adding the
+library (for Scala version 2.12 and 2.11, including support for ScalaJS
+and Scala Native). Include it in sbt by adding the
 following snippet to your build.sbt:
 
 ```scala

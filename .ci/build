@@ -1,7 +1,10 @@
 #!/bin/bash
 set -ev
 
-sbt scalafmtTest +mimaReportBinaryIssues +test
+sbt \
+    scalafmtTest \
+    +sprayJsonDerivationJVM/mimaReportBinaryIssues \
+    +test
 
 # Automatic publishing for tags that start with `v<digit>`
 if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
@@ -23,5 +26,9 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 EOF
 
     # Publish and release
-    sbt +publishSigned sonatypeRelease
+    sbt \
+	+sprayJsonDerivationJVM/publishSigned \
+	+sprayJsonDerivationJS/publishSigned \
+	+sprayJsonDerivationNative/publishSigned \
+	sonatypeRelease
 fi
