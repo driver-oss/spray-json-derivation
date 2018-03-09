@@ -1,6 +1,4 @@
-package xyz.driver.json
-
-import spray.json._
+package spray.json
 
 import org.scalatest._
 

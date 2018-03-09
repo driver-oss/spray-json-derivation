@@ -31,7 +31,6 @@ protocol stack. That's it.
 
 ```scala
 import spray.json._
-import xyz.driver.json.ImplicitDerivedFormats
 
 object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
   
@@ -73,7 +72,6 @@ object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
 It is also possible to summon derived formats explicitly by mixing in `DerivedFormats`instead of `ImplicitDerivedFormats`:
 ```scala
 import spray.json._
-import xyz.driver.json.DerivedFormats
 
 object Main extends App with DefaultJsonProtocol with DerivedFormats {
 

@@ -1,4 +1,4 @@
-package xyz.driver.json
+package spray.json
 
 import scala.annotation.StaticAnnotation
 

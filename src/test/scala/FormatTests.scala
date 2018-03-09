@@ -1,6 +1,5 @@
-package xyz.driver.json
+package spray.json
 
-import spray.json._
 import org.scalatest._
 
 trait FormatTests { self: FlatSpec =>
