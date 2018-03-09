@@ -1,7 +1,10 @@
+sudo: required
 language: scala
-
 jdk:
   - oraclejdk8 # this should be changed to openjdk as soon as it becomes available on Travis CI
+
+before_install:
+  - curl https://raw.githubusercontent.com/scala-native/scala-native/68122ea1ce88ff0ccfb94cbbcd4dae34b68f21cf/scripts/travis_setup.sh | bash -x
 
 env:
   - secure: "YkVvt6DGBUxfRRQ8LwxBWDets3BEZP+iS0PEzJLlOHdEyj5CDV7wDgIZgs/5Jme7TKSm5iCCVHFIJ0mnMrV7ZrqFBf0kKCicq/RYknR/fgggmiNztvg9RZhktTtk0rxNlWq2Ho0wighwIe7rDDEm0cbWuslg2DBWbZaGPVCpRQ3zUkpAKl338ztWgeH6C/u61ii1B5SyEN1rLVgMvoqN84YVwOSYeb3I4WIdWVVjtJyPNhSjgNGV6XudSQ3fTwv/XFMk9aGzbGnXu2KOADElfiTqqozwG3qSTiDjurcOLbGH9dAFVOz9bCdH7UCYamJ9M8a/RWINY7AJtxZ4ul15ksBqpVI8UxJhOSBrW15EYvLkTo+4IqWMcaodqakkUOjkbZUcUIShcA2JP+7PKk5Ap/Sg3t+ySumyKeNuaOebNgTbSdlrLRmg7Hl7L4sSddZf9p0M4HZ9UFLcm7UvLu+8PXe69BfE89qLEM0xJs1CG28w/uR6jN9uF2FzO6NWtdwZVGrTgXh7vvHYzDzdm74LoNKINk/zopC4sT6/+VVWCfX33oj2CkuvCLC4XwCOGeEMVKAtQFDIJ0t7j9wEwVrOy7USQfu/FcmZgXOBKvL5xP07VA4AY8MrNbwXSuHfrxJkzdj0M9XOdYyLJZK1h81fPVtWmP+DI6+Hf/KrVRjz9GY="
