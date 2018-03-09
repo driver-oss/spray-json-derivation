@@ -4,7 +4,7 @@ import spray.json._
 
 import org.scalatest._
 
-class CoproductTypeFormats
+class CoproductTypeFormatTests
     extends FlatSpec
     with FormatTests
     with DefaultJsonProtocol
@@ -15,6 +15,8 @@ class CoproductTypeFormats
   case class Value(x: Int) extends Expr
   case class Plus(lhs: Expr, rhs: Expr) extends Expr
   case object One extends Expr
+
+  implicit val exprFormat: RootJsonFormat[Expr] = jsonFormat[Expr]
 
   "No-parameter case class child" should behave like checkRoundtrip[Expr](
     Zero(),
@@ -40,6 +42,8 @@ class CoproductTypeFormats
   sealed abstract class Keyword(`type`: String)
   case class If(`type`: String) extends Keyword(`type`)
 
+  implicit val keywordFormat: RootJsonFormat[Keyword] = jsonFormat[Keyword]
+
   "GADT with type field alias" should behave like checkRoundtrip[Keyword](
     If("class"),
     """{"kind":"If","type":"class"}"""
@@ -48,6 +52,8 @@ class CoproductTypeFormats
   @gadt("""_`crazy type!`"""")
   sealed abstract trait Crazy
   case class CrazyType() extends Crazy
+
+  implicit val crazyFormat: RootJsonFormat[Crazy] = jsonFormat[Crazy]
 
   "GADT with special characters in type field" should behave like checkRoundtrip[
     Crazy](
@@ -59,12 +65,15 @@ class CoproductTypeFormats
   case object A extends Enum
   case object B extends Enum
 
+  implicit val enumFormat: RootJsonFormat[Enum] = jsonFormat[Enum]
+
   "Enum" should behave like checkRoundtrip[List[Enum]](
     A :: B :: Nil,
     """[{"type":"A"}, {"type":"B"}]"""
   )
 
-  "Serializing as sealed trait an deserializing as child" should "work" in {
+  "Serializing as sealed trait and deserializing as child" should "work" in {
+    implicit val plusFormat: RootJsonFormat[Plus] = jsonFormat[Plus]
     val expr: Expr = Plus(Value(42), Plus(Zero(), One))
     assert(expr.toJson.convertTo[Plus] == expr)
   }

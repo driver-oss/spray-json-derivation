@@ -26,14 +26,14 @@ build.sbt:
 libraryDependencies += "xyz.driver" %% "spray-json-derivation" % "<latest version>"
 ```
 
-Define some case classes and mix `DerivedFormats` into your JSON
+Define some case classes and mix `ImplicitDerivedFormats` into your JSON
 protocol stack. That's it.
 
 ```scala
 import spray.json._
-import xyz.driver.json.DerivedFormats
+import xyz.driver.json.ImplicitDerivedFormats
 
-object Main extends App with DefaultJsonProtocol with DerivedFormats {
+object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
   
   // Simple case classes
 
@@ -70,10 +70,27 @@ object Main extends App with DefaultJsonProtocol with DerivedFormats {
 }
 ```
 
+It is also possible to summon derived formats explicitly by mixing in `DerivedFormats`instead of `ImplicitDerivedFormats`:
+```scala
+import spray.json._
+import xyz.driver.json.DerivedFormats
+
+object Main extends App with DefaultJsonProtocol with DerivedFormats {
+
+  case class A(x: Int)
+  case class B(a: A, str: String)
+
+  implicit val bFormat: RootJsonFormat[B] = jsonFormat[B]
+
+  println(B(A(42), "hello world").toJson.prettyPrint)
+```
+This will have the additional benefit of outputting a stacktrace in case a format cannot be derived, hence making debugging
+much easier.
+
 ## Documentation
 Check out the main file
 [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) and the
-[test suite](src/test/scala/ProductTypeFormats.scala) for a complete
+[test suite](src/test/scala/ProductTypeFormatTests.scala) for a complete
 overview of the project.
 
 ## Development

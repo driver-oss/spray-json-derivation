@@ -5,7 +5,7 @@ import spray.json._
 
 import scala.language.experimental.macros
 
-/** Mixin that enables automatic derivation of JSON formats for any product
+/** Mixin that enables derivation of JSON formats for any product
   * (case classes) or coproduct (sealed traits) types. */
 trait DerivedFormats { self: BasicFormats =>
   type Typeclass[T] = JsonFormat[T]
@@ -75,14 +75,17 @@ trait DerivedFormats { self: BasicFormats =>
     }
   }
 
-  implicit def derivedFormat[T]: RootJsonFormat[T] =
-    macro DerivedFormatHelper.derivedFormat[T]
+  def jsonFormat[T]: RootJsonFormat[T] =
+    macro DerivedFormatMacros.derivedFormat[T]
 
 }
 
-object DerivedFormats extends DerivedFormats with BasicFormats
+trait ImplicitDerivedFormats extends DerivedFormats { self: BasicFormats =>
+  implicit def implicitJsonFormat[T]: RootJsonFormat[T] =
+    macro DerivedFormatMacros.derivedFormat[T]
+}
 
-object DerivedFormatHelper {
+object DerivedFormatMacros {
   import scala.reflect.macros.whitebox._
 
   /** Utility that converts a magnolia-generated JsonFormat to a RootJsonFormat. */
