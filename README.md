@@ -93,7 +93,7 @@ message. For example:
 ```scala
 import spray.json._
 
-class X() // not that X is not a case class, hence a format cannot be derived
+class X() // note that X is not a case class, hence a format cannot be derived
 case class Y(x: X)
 case class Z(y: Y, w: Int)
 
@@ -108,7 +108,10 @@ object MyProtocol extends DefaultJsonProtocol with DerivedFormats {
 
 ### Implicit Derived Formats
 
-It is also possible to summon derived formats implicitly by mixing in `ImplicitDerivedFormats`instead of `DerivedFormats`. This makes it possible to use derived formats without explicitly creating them first:
+It is also possible to summon derived formats implicitly by mixing in
+`ImplicitDerivedFormats`instead of `DerivedFormats`. This makes it
+possible to use derived formats without explicitly creating them
+first:
 
 ```scala
 import spray.json._
@@ -132,9 +135,9 @@ of drawbacks to consider:
 
 2. Macros that enable format derivation are expanded at every
    callsite. In other words, the compiler will try to create JSON
-   formats at every point an implicit RootJsonFormat is required fo a
-   case class. This can increase compile times and binary size if
-   formats are required in many locations
+   formats at every point where an implicit `RootJsonFormat` is
+   required for a case class. This can increase compile times and
+   binary size if formats are required in many locations.
 
 ### Documentation
 
