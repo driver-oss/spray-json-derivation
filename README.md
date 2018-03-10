@@ -139,19 +139,19 @@ of drawbacks to consider:
    required for a case class. This can increase compile times and
    binary size if formats are required in many locations.
 
-### Documentation
+## Documentation
 
 Check out the main file
 [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) and the
 [test suite](src/test/scala/ProductTypeFormatTests.scala) for a complete
 overview of the project.
 
-### Development
+## Development
 
 This project uses sbt. It is set up to auto-release when a tag is
 pushed to the main repository.
 
-### Copying
+## Copying
 
 Copyright 2018 Driver Inc.
 
