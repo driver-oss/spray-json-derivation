@@ -133,11 +133,11 @@ of drawbacks to consider:
    mechanism. Magnolia does no longer show a stack trace if a child
    format cannot be found.
 
-2. Macros that enable format derivation are expanded at every
-   callsite. In other words, the compiler will try to create JSON
-   formats at every point where an implicit `RootJsonFormat` is
-   required for a case class. This can increase compile times and
-   binary size if formats are required in many locations.
+2. Macros that enable format derivation are expanded at every call
+   site. In other words, the compiler will try to create JSON formats
+   at every point where an implicit `RootJsonFormat` is required for a
+   case class. This can increase compile times and binary size if
+   formats are required in many locations.
 
 ## Documentation
 
