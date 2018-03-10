@@ -123,6 +123,7 @@ object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
 
   println(B(A(42), "hello world").toJson.prettyPrint)
 
+}
 ```
 
 Although this variant of using the library provides the most power and
