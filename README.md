@@ -4,40 +4,59 @@
 
 # Spray JSON Format Derivation
 
-This library provides automatic spray JsonFormats for any `case class`
-and children of `sealed trait`s.
+This library provides automatic
+[spray-json](https://github.com/spray/spray-json) `RootJsonFormat`s
+for any `case class` and children of `sealed trait`s.
 
 It uses the [Magnolia](http://magnolia.work/) ([source
-code](https://github.com/propensive/magnolia)) typeclass derivation library
-to implicitly generate JSON formats for any product type. Magnolia
-integrates with spray so seamlessly that it is almost not worth the
-effort to publish this project as a full fledged repository; a single
-gist with the contents of
-[DerivedFormats.scala](src/main/scala/DerivedFormats.scala) would
-demonstrate almost all functionality.
+code](https://github.com/propensive/magnolia)) typeclass derivation
+library to implicitly generate JSON formats for any product
+type. Magnolia integrates with spray seamlessly, to such a point that
+a single contents of
+[DerivedFormats.scala](src/main/scala/DerivedFormats.scala) provide
+almost all functionality.
 
 ## Getting Started
 
 Spray JSON Format Derivation is published to maven central as a Scala
-library. Include it in sbt by adding the following snippet to your
-build.sbt:
+library (for Scala version 2.12 and 2.11, support for ScalaJS
+and Scala Native is pending). Include it in sbt by adding the
+following snippet to your build.sbt:
 
 ```scala
 libraryDependencies += "xyz.driver" %% "spray-json-derivation" % "<latest version>"
 ```
 
-Define some case classes and mix `ImplicitDerivedFormats` into your JSON
-protocol stack. That's it.
+### Basic Usage
+
+Define some case classes and mix `DerivedFormats` into your JSON
+protocol stack. Formats can now be summoned with the `jsonFormat[A]`
+helper method. E.g.
 
 ```scala
 import spray.json._
 
-object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
-  
-  // Simple case classes
+// case classes
+case class A(x: Int)
+case class B(a: A, str: String)
 
-  case class A(x: Int)
-  case class B(a: A, str: String)
+// sealed traits
+sealed trait X
+case class Y(x: Int) extends X
+case class Z(y: Y, str: String) extends X
+
+object MyProtocol extends DefaultJsonProtocol with DerivedFormats {
+  implicit val bFormat: RootJsonFormat[B] = jsonFormat[B] // [1]
+  implicit val xFormat: RootJsonFormat[X] = jsonFormat[X]
+}
+
+// [1]: Note that no format was specified for A, although B contains an A.
+//      In general, formats of children are not required to be defined
+//      explicitly if the child is itself a case class. However they can still
+//      be overriden if desired.
+
+object Main extends App {
+  import MyProtocol._
 
   println(B(A(42), "hello world").toJson.prettyPrint)
   // {
@@ -46,13 +65,6 @@ object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
   //   },
   //   "str": "hello world"
   // }
-
-
-  // Sealed traits
-
-  sealed trait X
-  case class Y(x: Int) extends X
-  case class Z(y: Y, str: String) extends X
 
   println(Seq[X](Z(Y(42), "foo"), Y(2)).toJson.prettyPrint)
   // [{
@@ -69,33 +81,75 @@ object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
 }
 ```
 
-It is also possible to summon derived formats explicitly by mixing in `DerivedFormats`instead of `ImplicitDerivedFormats`:
+### Error Handling
+
+In case a format cannot be derived, e.g. if a child is not a case
+class and does not have a format available, Magnolia will report a
+detailed stack trace about which format could not be found. This is
+most useful for deeply nested structures, where Scala's conventional
+implicit lookup would simply fail without giving a detailed error
+message. For example:
+
 ```scala
 import spray.json._
 
-object Main extends App with DefaultJsonProtocol with DerivedFormats {
+class X() // not that X is not a case class, hence a format cannot be derived
+case class Y(x: X)
+case class Z(y: Y, w: Int)
+
+object MyProtocol extends DefaultJsonProtocol with DerivedFormats {
+  implicit val fmt: RootJsonFormat[Z] = jsonFormat[Z]
+}
+// magnolia: could not find JsonFormat.Typeclass for type ProductTypeFormatTests.this.X
+//      in parameter 'x' of product type ProductTypeFormatTests.this.Y
+//      in parameter 'y' of product type ProductTypeFormatTests.this.Z
+//    implicit val fmt: RootJsonFormat[Z] = jsonFormat[Z]
+```
+
+### Implicit Derived Formats
+
+It is also possible to summon derived formats implicitly by mixing in `ImplicitDerivedFormats`instead of `DerivedFormats`. This makes it possible to use derived formats without explicitly creating them first:
+
+```scala
+import spray.json._
+
+object Main extends App with DefaultJsonProtocol with ImplicitDerivedFormats {
 
   case class A(x: Int)
   case class B(a: A, str: String)
 
-  implicit val bFormat: RootJsonFormat[B] = jsonFormat[B]
-
   println(B(A(42), "hello world").toJson.prettyPrint)
-```
-This will have the additional benefit of outputting a stacktrace in case a format cannot be derived, hence making debugging
-much easier.
 
-## Documentation
+```
+
+Although this variant of using the library provides the most power and
+requires the least amount of boilerplate, it does come with a couple
+of drawbacks to consider:
+
+1. Error handling falls back to the standard implicit lookup
+   mechanism. Magnolia does no longer show a stack trace if a child
+   format cannot be found.
+
+2. Macros that enable format derivation are expanded at every
+   callsite. In other words, the compiler will try to create JSON
+   formats at every point an implicit RootJsonFormat is required fo a
+   case class. This can increase compile times and binary size if
+   formats are required in many locations
+
+### Documentation
+
 Check out the main file
 [DerivedFormats.scala](src/main/scala/DerivedFormats.scala) and the
 [test suite](src/test/scala/ProductTypeFormatTests.scala) for a complete
 overview of the project.
 
-## Development
+### Development
+
 This project uses sbt. It is set up to auto-release when a tag is
 pushed to the main repository.
 
-## Copying
+### Copying
+
 Copyright 2018 Driver Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
