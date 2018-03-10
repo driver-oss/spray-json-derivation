@@ -78,11 +78,15 @@ trait DerivedFormats { self: BasicFormats =>
     macro DerivedFormatMacros.derivedFormat[T]
 
 }
+object DerivedFormats extends DerivedFormats with DefaultJsonProtocol
 
 trait ImplicitDerivedFormats extends DerivedFormats { self: BasicFormats =>
   implicit def implicitJsonFormat[T]: RootJsonFormat[T] =
     macro DerivedFormatMacros.derivedFormat[T]
 }
+object ImplicitDerivedFormats
+    extends ImplicitDerivedFormats
+    with DefaultJsonProtocol
 
 object DerivedFormatMacros {
   import scala.reflect.macros.whitebox._
