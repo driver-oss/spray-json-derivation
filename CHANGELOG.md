@@ -1,3 +1,11 @@
+Version 0.4.1
+-------------
+Add MiMa plugin to check binary backwards compatibility.
+
+Version 0.4.0
+-------------
+Same as version 0.3.1; the package rename should have warranted a major version bump.
+
 Version 0.3.1
 -------------
 - Rename packages to "spray.json" for seamless integration with spray-json.

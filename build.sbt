@@ -20,3 +20,5 @@ libraryDependencies ++= Seq(
   "com.propensive" %% "magnolia" % "0.7.1",
   "org.scalatest" %% "scalatest" % "3.0.2" % "test"
 )
+
+mimaPreviousArtifacts := Set("xyz.driver" %% "spray-json-derivation" % "0.3.1")
