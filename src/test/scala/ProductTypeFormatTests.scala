@@ -74,4 +74,21 @@ class ProductTypeFormatTests
     """{"h": {"x":true}}"""
   )
 
+  case class Opt(x: Option[Int])
+  implicit val ofmt = jsonFormat[Opt]
+
+  "Optional fields with some value" should behave like checkRoundtrip(
+    Opt(Some(2)),
+    """{"x":2}"""
+  )
+
+  "Optional fields with no value (null)" should behave like checkRoundtrip(
+    Opt(None),
+    """{"x":null}"""
+  )
+
+  "Optional fields with no value (undefined)" should "deserialize" in {
+    assert("{}".parseJson.convertTo[Opt] == Opt(None))
+  }
+
 }
