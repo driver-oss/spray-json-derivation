@@ -24,7 +24,12 @@ trait DerivedFormats { self: BasicFormats =>
             ctx.rawConstruct(Seq.empty)
           } else {
             ctx.construct { param =>
-              param.typeclass.read(obj.fields(param.label))
+              val fieldValue = if (param.option) {
+                obj.fields.getOrElse(param.label, JsNull)
+              } else {
+                obj.fields(param.label)
+              }
+              param.typeclass.read(fieldValue)
             }
           }
         case js =>
