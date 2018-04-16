@@ -15,9 +15,9 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 
     # Set up publishing settings and credentials
     cat <<EOF > credentials.sbt
-    useGpg := true
-    pgpSigningKey := Some(0x488F99C904F077E8l)
-    credentials += Credentials(
+    useGpg in Global := true
+    pgpSigningKey in Global := Some(0x488F99C904F077E8l)
+    credentials in Global += Credentials(
       "Sonatype Nexus Repository Manager",
       "oss.sonatype.org",
       "vZKBpUCV",

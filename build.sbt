@@ -36,6 +36,7 @@ lazy val sprayJsonDerivation =
     )
     .nativeSettings(
       crossScalaVersions := "2.11.12" :: Nil,
+      sources in (Compile, doc) := Seq.empty,
       unmanagedSourceDirectories in Test := Seq.empty
     )
 
