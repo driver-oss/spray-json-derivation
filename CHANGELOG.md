@@ -1,3 +1,14 @@
+# Version 0.4.3
+
+- Allow overriding of how field names are extracted from case class
+  parameter names. This enables alternative naming conventions such as
+  snake_case without having to change the name of parameters in the
+  Scala representation.
+
+- Deserialize `Option[_]` fields to `None` in case they are not
+  present in JSON form. This was previously not handled correctly and
+  caused deserialization errors.
+
 # Version 0.4.2
 
 Build and publish for ScalaJS and Scala Native. This release adds a
