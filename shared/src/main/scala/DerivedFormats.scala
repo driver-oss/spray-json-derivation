@@ -89,15 +89,27 @@ trait DerivedFormats { self: BasicFormats =>
     macro DerivedFormatMacros.derivedFormat[T]
 
 }
+
+@deprecated("use DerivedJsonProtocol", "spray-json-derivation 0.4.3")
 object DerivedFormats extends DerivedFormats with DefaultJsonProtocol
 
 trait ImplicitDerivedFormats extends DerivedFormats { self: BasicFormats =>
   implicit def implicitJsonFormat[T]: RootJsonFormat[T] =
     macro DerivedFormatMacros.derivedFormat[T]
 }
+
+@deprecated("use ImplicitDerivedJsonProtocol", "spray-json-derivation 0.4.3")
 object ImplicitDerivedFormats
     extends ImplicitDerivedFormats
     with DefaultJsonProtocol
+
+trait DerivedJsonProtocol extends DefaultJsonProtocol with DerivedFormats
+object DerivedJsonProtocol extends DerivedJsonProtocol
+
+trait ImplicitDerivedJsonProtocol
+    extends DefaultJsonProtocol
+    with ImplicitDerivedFormats
+object ImplicitDerivedJsonProtocol extends ImplicitDerivedJsonProtocol
 
 object DerivedFormatMacros {
   import scala.reflect.macros.whitebox._

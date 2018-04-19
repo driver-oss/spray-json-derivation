@@ -5,8 +5,7 @@ import org.scalatest._
 class ProductTypeFormatTests
     extends FlatSpec
     with FormatTests
-    with DerivedFormats
-    with DefaultJsonProtocol {
+    with DerivedJsonProtocol {
 
   case class A()
   case class B(x: Int, b: String, mp: Map[String, Int])

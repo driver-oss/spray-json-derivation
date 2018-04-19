@@ -5,8 +5,7 @@ import org.scalatest._
 class ImplicitDerivedFormatTests
     extends FlatSpec
     with FormatTests
-    with ImplicitDerivedFormats
-    with DefaultJsonProtocol {
+    with ImplicitDerivedJsonProtocol {
 
   case class B(x: Int, b: String, mp: Map[String, Int])
   case class C(b: B)
