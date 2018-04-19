@@ -9,11 +9,16 @@ import scala.language.experimental.macros
 trait DerivedFormats { self: BasicFormats =>
   type Typeclass[T] = JsonFormat[T]
 
+  /** Convert the name of a parameter to that of a field in a JSON object. This
+    * method can be overriden to use alternative naming conventions. */
+  def extractFieldName(paramName: String): String = paramName
+
   def combine[T](ctx: CaseClass[JsonFormat, T]): JsonFormat[T] =
     new JsonFormat[T] {
       override def write(value: T): JsValue = {
         val fields: Seq[(String, JsValue)] = ctx.parameters.map { param =>
-          param.label -> param.typeclass.write(param.dereference(value))
+          extractFieldName(param.label) -> param.typeclass.write(
+            param.dereference(value))
         }
         JsObject(fields: _*)
       }
@@ -24,10 +29,11 @@ trait DerivedFormats { self: BasicFormats =>
             ctx.rawConstruct(Seq.empty)
           } else {
             ctx.construct { param =>
+              val fieldName = extractFieldName(param.label)
               val fieldValue = if (param.option) {
-                obj.fields.getOrElse(param.label, JsNull)
+                obj.fields.getOrElse(fieldName, JsNull)
               } else {
-                obj.fields(param.label)
+                obj.fields(fieldName)
               }
               param.typeclass.read(fieldValue)
             }

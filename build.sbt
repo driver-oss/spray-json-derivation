@@ -1,5 +1,6 @@
 // shadow sbt-scalajs' crossProject and CrossType until Scala.js 1.0.0 is released
 import sbtcrossproject.{crossProject, CrossType}
+import com.typesafe.tools.mima.core._
 
 lazy val sprayJsonDerivation =
   crossProject(JVMPlatform, JSPlatform, NativePlatform)
@@ -29,6 +30,9 @@ lazy val sprayJsonDerivation =
     .jvmSettings(
       mimaPreviousArtifacts := Set(
         "xyz.driver" %% "spray-json-derivation" % "0.3.1"),
+      mimaBinaryIssueFilters +=
+        ProblemFilters.exclude[ReversedMissingMethodProblem](
+          "spray.json.DerivedFormats.extractFieldName"),
       crossScalaVersions := "2.12.4" :: "2.11.12" :: Nil
     )
     .jsSettings(
