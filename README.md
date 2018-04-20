@@ -13,7 +13,7 @@ code](https://github.com/propensive/magnolia)) typeclass derivation
 library to implicitly generate JSON formats for any product
 type. Magnolia integrates with spray seamlessly, to such a point that
 the contents of
-[DerivedFormats.scala](src/main/scala/DerivedFormats.scala) provide
+[DerivedFormats.scala](shared/src/main/scala/DerivedFormats.scala) provide
 almost all functionality.
 
 ## Getting Started
@@ -143,8 +143,8 @@ of drawbacks to consider:
 ## Documentation
 
 Check out the main file
-[DerivedFormats.scala](src/main/scala/DerivedFormats.scala) and the
-[test suite](src/test/scala/ProductTypeFormatTests.scala) for a complete
+[DerivedFormats.scala](shared/src/main/scala/DerivedFormats.scala) and the
+[test suite](shared/src/test/scala/ProductTypeFormatTests.scala) for a complete
 overview of the project.
 
 ## Development
