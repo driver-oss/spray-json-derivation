@@ -11,7 +11,7 @@ trait DerivedFormats { self: BasicFormats =>
 
   /** Convert the name of a parameter to that of a field in a JSON object. This
     * method can be overriden to use alternative naming conventions. */
-  def extractFieldName(paramName: String): String = paramName
+  @inline def extractFieldName(paramName: String): String = paramName
 
   def combine[T](ctx: CaseClass[JsonFormat, T]): JsonFormat[T] =
     new JsonFormat[T] {
