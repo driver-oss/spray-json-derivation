@@ -8,6 +8,8 @@ This library provides automatic
 [spray-json](https://github.com/spray/spray-json) `RootJsonFormat`s
 for any `case class` and children of `sealed trait`s.
 
+It is available (and makes spray-json available) for Scala, ScalaJS and Scala Native.
+
 It uses the [Magnolia](http://magnolia.work/) ([source
 code](https://github.com/propensive/magnolia)) typeclass derivation
 library to implicitly generate JSON formats for any product
