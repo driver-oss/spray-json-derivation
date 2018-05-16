@@ -1,3 +1,8 @@
+# Version 0.4.4
+
+- Add utility mixins to change serialization of fieldnames, such as
+  snake_case and kebab-case.
+
 # Version 0.4.3
 
 - Allow overriding of how field names are extracted from case class

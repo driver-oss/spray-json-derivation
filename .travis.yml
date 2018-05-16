@@ -3,6 +3,10 @@ language: scala
 jdk:
   - oraclejdk8 # this should be changed to openjdk as soon as it becomes available on Travis CI
 
+addons:
+  apt:
+    update: true
+
 before_install:
   - curl https://raw.githubusercontent.com/scala-native/scala-native/68122ea1ce88ff0ccfb94cbbcd4dae34b68f21cf/scripts/travis_setup.sh | bash -x
 
