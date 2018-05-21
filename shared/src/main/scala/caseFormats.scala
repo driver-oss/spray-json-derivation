@@ -15,7 +15,12 @@ trait KebabCase { self: DerivedFormats =>
 object FieldNaming {
 
   @inline final private def isLower(ch: Char): Boolean =
-    ((ch & 0x20) != 0) || (ch == '_')
+    ((ch & 0x20) != 0) && (ch != '_')
+  @inline final private def isUpper(ch: Char): Boolean =
+    ((ch & 0x20) == 0) && (ch != '_')
+
+  @inline final private def toLower(ch: Char): Char =
+    if (ch == '_') '_' else (ch | 0x20).toChar
 
   @inline final def substituteCamel(paramName: String, substitute: Char) = {
     val length = paramName.length
@@ -23,21 +28,14 @@ object FieldNaming {
     var i = 0
     while (i < length) {
       val cur = paramName(i)
-      val lower = isLower(cur)
-      if (lower) {
-        builder.append(cur)
-      } else {
-        builder.append((cur ^ 0x20).toChar)
-      }
-      if (lower && i + 1 < length) {
+      builder.append(toLower(cur))
+      if (isLower(cur) && (i + 1 < length)) {
         val next = paramName(i + 1)
-        if (!isLower(next)) {
+        if (isUpper(next)) {
           builder.append(substitute)
-          builder.append((next ^ 0x20).toChar)
-        } else {
-          builder.append(next)
+          builder.append(toLower(next))
+          i += 1
         }
-        i += 1
       }
       i += 1
     }
