@@ -28,6 +28,8 @@ lazy val sprayJsonDerivation =
       libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.5" % "test"
     )
     .jvmSettings(
+      mimaPreviousArtifacts := Set(
+        "xyz.driver" %% "spray-json-derivation" % "0.5.0"),
       crossScalaVersions := "2.12.6" :: "2.11.12" :: Nil
     )
     .jsSettings(
