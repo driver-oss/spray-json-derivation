@@ -1,6 +1,6 @@
 ivyLoggingLevel := UpdateLogging.Quiet
 
-addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.2.0")
+addSbtPlugin("com.geirsson" % "sbt-scalafmt" % "1.6.0-RC3")
 addSbtPlugin("com.typesafe" % "sbt-mima-plugin" % "0.1.18")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.4.0")
 addSbtPlugin("org.portable-scala" % "sbt-scala-native-crossproject" % "0.4.0")

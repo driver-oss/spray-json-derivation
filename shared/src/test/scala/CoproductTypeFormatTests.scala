@@ -54,7 +54,8 @@ class CoproductTypeFormatTests
   implicit val crazyFormat: RootJsonFormat[Crazy] = jsonFormat[Crazy]
 
   "GADT with special characters in type field" should behave like checkRoundtrip[
-    Crazy](
+    Crazy
+  ](
     CrazyType(),
     """{"_`crazy type!`\"": "CrazyType"}"""
   )

@@ -1,3 +1,18 @@
+# Version 0.4.6
+
+- Fix a bug in the derivation macro that prevented deriving formats for
+  parameterized types. I.e. it is now possible to write derive the following:
+  ```
+  class A[B](b: B)
+  implicit def fmt[B: JsonFormat] = jsonFormat[A]
+  ```
+
+- Formatting and documentation tweaks
+
+# Version 0.4.5
+
+Fixes an issue in when serializing field names with an alternate case.
+
 # Version 0.4.4
 
 - Add utility mixins to change serialization of fieldnames, such as

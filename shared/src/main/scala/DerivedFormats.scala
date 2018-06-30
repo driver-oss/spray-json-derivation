@@ -18,7 +18,8 @@ trait DerivedFormats { self: BasicFormats =>
       override def write(value: T): JsValue = {
         val fields: Seq[(String, JsValue)] = ctx.parameters.map { param =>
           extractFieldName(param.label) -> param.typeclass.write(
-            param.dereference(value))
+            param.dereference(value)
+          )
         }
         JsObject(fields: _*)
       }
@@ -40,7 +41,8 @@ trait DerivedFormats { self: BasicFormats =>
           }
         case js =>
           deserializationError(
-            s"Cannot read JSON '$js' as a ${ctx.typeName.full}")
+            s"Cannot read JSON '$js' as a ${ctx.typeName.full}"
+          )
       }
     }
 
@@ -57,7 +59,8 @@ trait DerivedFormats { self: BasicFormats =>
           case obj: JsObject =>
             JsObject(
               (Map(typeFieldName -> JsString(sub.typeName.short)) ++
-                obj.fields).toSeq: _*)
+                obj.fields).toSeq: _*
+            )
           case js => js
         }
       }
@@ -71,7 +74,8 @@ trait DerivedFormats { self: BasicFormats =>
           case _ =>
             deserializationError(
               s"Cannot deserialize JSON to ${ctx.typeName.full} " +
-                "because serialized type cannot be determined.")
+                "because serialized type cannot be determined."
+            )
         }
 
         ctx.subtypes.find(_.typeName.short == typeName) match {
@@ -79,7 +83,8 @@ trait DerivedFormats { self: BasicFormats =>
           case None =>
             deserializationError(
               s"Cannot deserialize JSON to ${ctx.typeName.full} " +
-                s"because type '${typeName}' is unsupported.")
+                s"because type '${typeName}' is unsupported."
+            )
         }
       }
     }
@@ -117,7 +122,7 @@ object DerivedFormatMacros {
   /** Utility that converts a magnolia-generated JsonFormat to a RootJsonFormat. */
   def derivedFormat[T: c.WeakTypeTag](c: Context): c.Tree = {
     import c.universe._
-    val tpe = weakTypeOf[T].typeSymbol.asType
+    val tpe = weakTypeOf[T]
     val sprayPkg = c.mirror.staticPackage("spray.json")
     val valName = TermName(c.freshName("format"))
     q"""{

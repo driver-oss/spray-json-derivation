@@ -90,4 +90,28 @@ class ProductTypeFormatTests
     assert("{}".parseJson.convertTo[Opt] == Opt(None))
   }
 
+  case class Typed[T](t: T)
+
+  implicit def typed[T: JsonFormat] = jsonFormat[Typed[T]]
+
+  "Class with a type parameter" should behave like checkRoundtrip(
+    Typed[Int](42),
+    """{"t":42}"""
+  )
+
+  "Class with nested types" should behave like checkRoundtrip(
+    Typed[Typed[String]](Typed("hello world")),
+    """{"t":{"t":"hello world"}}"""
+  )
+
+  case class Phantom[T](x: Int)
+
+  // no json format required for T
+  implicit def phantom[T] = jsonFormat[Phantom[T]]
+
+  "Phantom types without a format" should behave like checkRoundtrip(
+    Phantom[Int => String](42), // the given type parameter should not have a format
+    """{"x":42}"""
+  )
+
 }
