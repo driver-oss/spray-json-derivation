@@ -25,18 +25,13 @@ lazy val sprayJsonDerivation =
       )
     )
     .platformsSettings(JVMPlatform, JSPlatform)(
-      libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.3" % "test"
+      libraryDependencies += "org.scalatest" %%% "scalatest" % "3.0.5" % "test"
     )
     .jvmSettings(
-      mimaPreviousArtifacts := Set(
-        "xyz.driver" %% "spray-json-derivation" % "0.3.1"),
-      mimaBinaryIssueFilters +=
-        ProblemFilters.exclude[ReversedMissingMethodProblem](
-          "spray.json.DerivedFormats.extractFieldName"),
-      crossScalaVersions := "2.12.4" :: "2.11.12" :: Nil
+      crossScalaVersions := "2.12.6" :: "2.11.12" :: Nil
     )
     .jsSettings(
-      crossScalaVersions := "2.12.4" :: "2.11.12" :: Nil
+      crossScalaVersions := "2.12.6" :: "2.11.12" :: Nil
     )
     .nativeSettings(
       crossScalaVersions := "2.11.12" :: Nil,

@@ -1,4 +1,4 @@
-# Version UNRELEASED
+# Version 0.5.0
 
 - None values are no longer written to objects by default. This is
   configurable by overriding `printNull` in DerivedFormats.
