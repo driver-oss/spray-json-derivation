@@ -1,3 +1,7 @@
+# Version 0.4.7
+
+ Upgrade Magnolia from 0.7.1-1 to 0.8.0-1.
+
 # Version 0.4.6
 
 - Fix a bug in the derivation macro that prevented deriving formats for
