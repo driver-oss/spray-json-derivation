@@ -1,7 +1,9 @@
-# Version 0.5.0
+# Version UNRELEASED
 
-None values are no longer written to objects by default. This is
-configurable by overriding `printNull` in DerivedFormats.
+- None values are no longer written to objects by default. This is
+  configurable by overriding `printNull` in DerivedFormats.
+
+- Change references of GADTs to ADTs
 
 # Version 0.4.7
 

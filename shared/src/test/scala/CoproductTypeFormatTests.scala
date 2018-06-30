@@ -36,24 +36,24 @@ class CoproductTypeFormatTests
     """{"type": "One"}"""
   )
 
-  @gadt("kind")
+  @adt("kind")
   sealed abstract class Keyword(`type`: String)
   case class If(`type`: String) extends Keyword(`type`)
 
   implicit val keywordFormat: RootJsonFormat[Keyword] = jsonFormat[Keyword]
 
-  "GADT with type field alias" should behave like checkRoundtrip[Keyword](
+  "ADT with type field alias" should behave like checkRoundtrip[Keyword](
     If("class"),
     """{"kind":"If","type":"class"}"""
   )
 
-  @gadt("""_`crazy type!`"""")
+  @adt("""_`crazy type!`"""")
   sealed abstract trait Crazy
   case class CrazyType() extends Crazy
 
   implicit val crazyFormat: RootJsonFormat[Crazy] = jsonFormat[Crazy]
 
-  "GADT with special characters in type field" should behave like checkRoundtrip[
+  "ADT with special characters in type field" should behave like checkRoundtrip[
     Crazy
   ](
     CrazyType(),

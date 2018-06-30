@@ -60,7 +60,7 @@ trait DerivedFormats { self: BasicFormats =>
   def dispatch[T](ctx: SealedTrait[JsonFormat, T]): JsonFormat[T] = {
     val typeFieldName = ctx.annotations
       .collectFirst {
-        case g: gadt => g.typeFieldName
+        case g: adt => g.typeFieldName
       }
       .getOrElse("type")
 
