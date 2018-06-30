@@ -73,23 +73,6 @@ class ProductTypeFormatTests
     """{"h": {"x":true}}"""
   )
 
-  case class Opt(x: Option[Int])
-  implicit val optFmt = jsonFormat[Opt]
-
-  "Option fields with some value" should behave like checkRoundtrip(
-    Opt(Some(2)),
-    """{"x":2}"""
-  )
-
-  "Option fields with null value" should behave like checkRoundtrip(
-    Opt(None),
-    """{"x":null}"""
-  )
-
-  "Option fields with undefined value" should "deserialize" in {
-    assert("{}".parseJson.convertTo[Opt] == Opt(None))
-  }
-
   case class Typed[T](t: T)
 
   implicit def typed[T: JsonFormat] = jsonFormat[Typed[T]]

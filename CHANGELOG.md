@@ -1,3 +1,8 @@
+# Version 0.5.0
+
+None values are no longer written to objects by default. This is
+configurable by overriding `printNull` in DerivedFormats.
+
 # Version 0.4.7
 
  Upgrade Magnolia from 0.7.1-1 to 0.8.0-1.
@@ -5,7 +10,7 @@
 # Version 0.4.6
 
 - Fix a bug in the derivation macro that prevented deriving formats for
-  parameterized types. I.e. it is now possible to write derive the following:
+  parameterized types. I.e. it is now possible to derive the following:
   ```
   class A[B](b: B)
   implicit def fmt[B: JsonFormat] = jsonFormat[A]

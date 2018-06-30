@@ -13,13 +13,24 @@ trait DerivedFormats { self: BasicFormats =>
     * method can be overriden to use alternative naming conventions. */
   @inline def extractFieldName(paramName: String): String = paramName
 
+  /** Determines if `None` instances of options should be included in JSON output.
+    *
+    * By default, `None` values are ommitted entirely from resulting JSON
+    * objects. If overridden, they will be included as `null`s instead.
+    *
+    * Note that this has no effect in *reading* option types; undefined or null
+    * values are always converted to `None`. */
+  def printNull: Boolean = false
+
   def combine[T](ctx: CaseClass[JsonFormat, T]): JsonFormat[T] =
     new JsonFormat[T] {
       override def write(value: T): JsValue = {
-        val fields: Seq[(String, JsValue)] = ctx.parameters.map { param =>
-          extractFieldName(param.label) -> param.typeclass.write(
-            param.dereference(value)
-          )
+        val fields: Seq[(String, JsValue)] = ctx.parameters.collect {
+          case param
+              if !param.option || param.dereference(value) != None || printNull =>
+            extractFieldName(param.label) -> param.typeclass.write(
+              param.dereference(value)
+            )
         }
         JsObject(fields: _*)
       }
