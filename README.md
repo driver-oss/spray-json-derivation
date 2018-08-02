@@ -70,7 +70,7 @@ object Main extends App {
 
   println(Seq[X](Z(Y(42), "foo"), Y(2)).toJson.prettyPrint)
   // [{
-  //   "type": "Z",
+  //   "@type": "Z",
   //   "y": {
   //     "x": 42
   //   },

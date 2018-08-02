@@ -68,7 +68,7 @@ trait DerivedFormats { self: BasicFormats =>
       .collectFirst {
         case g: adt => g.typeFieldName
       }
-      .getOrElse("type")
+      .getOrElse("@type")
 
     new JsonFormat[T] {
       override def write(value: T): JsValue = ctx.dispatch(value) { sub =>
