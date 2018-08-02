@@ -90,11 +90,35 @@ class ProductTypeFormatTests
   case class Phantom[T](x: Int)
 
   // no json format required for T
-  implicit def phantom[T] = jsonFormat[Phantom[T]]
+  implicit def phantom[T]: RootJsonFormat[Phantom[T]] = jsonFormat[Phantom[T]]
 
   "Phantom types without a format" should behave like checkRoundtrip(
     Phantom[Int => String](42), // the given type parameter should not have a format
     """{"x":42}"""
   )
 
+  implicit val vc = jsonFormat[ProductTypeFormatTests.Wrapper]
+  "Value classes" should behave like checkRoundtrip(
+    ProductTypeFormatTests.Wrapper(42),
+    """42"""
+  )
+
+  implicit def vcg[T: JsonFormat] = jsonFormat[ProductTypeFormatTests.WrapperGeneric[T]]
+  "Value classes with generic parameters" should behave like checkRoundtrip(
+    ProductTypeFormatTests.WrapperGeneric[F](F(42)),
+    """{"y": 42}"""
+  )
+
+  implicit def vcp[T] = jsonFormat[ProductTypeFormatTests.WrapperPhantom[T]]
+  "value classes with unused generic parameters" should behave like checkRoundtrip(
+    ProductTypeFormatTests.WrapperPhantom[Int => String](42),
+    """42"""
+  )
+
+}
+
+object ProductTypeFormatTests {
+  case class Wrapper(x: Int) extends AnyVal
+  case class WrapperGeneric[A](x: A) extends AnyVal
+  case class WrapperPhantom[A](x: Int) extends AnyVal
 }

@@ -24,18 +24,24 @@ trait DerivedFormats { self: BasicFormats =>
 
   def combine[T](ctx: CaseClass[JsonFormat, T]): JsonFormat[T] =
     new JsonFormat[T] {
-      override def write(value: T): JsValue = {
-        val fields: Seq[(String, JsValue)] = ctx.parameters.collect {
-          case param
-              if !param.option || param.dereference(value) != None || printNull =>
-            extractFieldName(param.label) -> param.typeclass.write(
-              param.dereference(value)
-            )
+      override def write(value: T): JsValue =
+        if (ctx.isValueClass) {
+          val param = ctx.parameters.head
+          param.typeclass.write(param.dereference(value))
+        } else {
+          val fields: Seq[(String, JsValue)] = ctx.parameters.collect {
+            case param
+                if !param.option || param.dereference(value) != None || printNull =>
+              extractFieldName(param.label) -> param.typeclass.write(
+                param.dereference(value)
+              )
+          }
+          JsObject(fields: _*)
         }
-        JsObject(fields: _*)
-      }
 
       override def read(value: JsValue): T = value match {
+        case js if ctx.isValueClass =>
+          ctx.construct(param => param.typeclass.read(value))
         case obj: JsObject =>
           if (ctx.isObject) {
             ctx.rawConstruct(Seq.empty)
