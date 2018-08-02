@@ -1,3 +1,11 @@
+# Version 0.6.0
+
+- Value classes are handled transparently. I.e. their values are
+  encoded directly, without being wrapped in a JSON object.
+
+- Rename default type field from 'type' to @type'. This makes name
+  clashes less likely.
+
 # Version 0.5.0
 
 - None values are no longer written to objects by default. This is
