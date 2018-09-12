@@ -1,4 +1,4 @@
-# UNRELEASED
+# Version 0.7.0
 
 - Upgrade magnolia to official upstream, 0.10.0.
 - Upgrade sbt to 1.2.1 and use sbt-gpg.
