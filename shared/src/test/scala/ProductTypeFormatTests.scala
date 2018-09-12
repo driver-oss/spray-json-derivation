@@ -12,8 +12,8 @@ class ProductTypeFormatTests
   case class C(b: B)
   case object D
   case class E(d: D.type)
-  case class F(x: Int)
-  case class G(f: F)
+  case class FF(x: Int)
+  case class G(f: FF)
 
   implicit val aFormat: RootJsonFormat[A] = jsonFormat[A]
   implicit val bFormat: RootJsonFormat[B] = jsonFormat[B]
@@ -44,28 +44,28 @@ class ProductTypeFormatTests
   )
 
   // custom format for F, that inverts the value of parameter x
-  implicit val fFormat: RootJsonFormat[F] = new RootJsonFormat[F] {
-    override def write(f: F): JsValue = JsObject("y" -> f.x.toJson)
-    override def read(js: JsValue): F =
-      F(js.asJsObject.fields("y").convertTo[Int])
+  implicit val fFormat: RootJsonFormat[FF] = new RootJsonFormat[FF] {
+    override def write(f: FF): JsValue = JsObject("y" -> f.x.toJson)
+    override def read(js: JsValue): FF =
+      FF(js.asJsObject.fields("y").convertTo[Int])
   }
 
   "Overriding with a custom format" should behave like checkRoundtrip(
-    F(2),
+    FF(2),
     """{"y":2}"""
   )
 
   implicit val gFormat: RootJsonFormat[G] = jsonFormat[G]
 
   "Derving a format with a custom child format" should behave like checkRoundtrip(
-    G(F(2)),
+    G(FF(2)),
     """{"f": {"y":2}}"""
   )
 
   case class H(x: Boolean)
   case class I(h: H)
 
-  // there is no format defined for H, Magnolia will generate one automatically
+  implicit val hFormat = jsonFormat[H]
   implicit val iFormat: RootJsonFormat[I] = jsonFormat[I]
 
   "Deriving a format that has no implicit child formats available" should behave like checkRoundtrip(
@@ -105,7 +105,7 @@ class ProductTypeFormatTests
 
   implicit def vcg[T: JsonFormat] = jsonFormat[ProductTypeFormatTests.WrapperGeneric[T]]
   "Value classes with generic parameters" should behave like checkRoundtrip(
-    ProductTypeFormatTests.WrapperGeneric[F](F(42)),
+    ProductTypeFormatTests.WrapperGeneric[FF](FF(42)),
     """{"y": 42}"""
   )
 

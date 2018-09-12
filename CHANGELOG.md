@@ -1,3 +1,7 @@
+# UNRELEASED
+
+- Upgrade magnolia to official upstream, 0.10.0.
+
 # Version 0.6.0
 
 - Value classes are handled transparently. I.e. their values are

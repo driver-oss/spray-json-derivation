@@ -21,7 +21,7 @@ lazy val sprayJsonDerivation =
       ),
       libraryDependencies ++= Seq(
         "io.crashbox" %%% "spray-json" % "1.3.4-1",
-        "io.crashbox" %%% "magnolia" % "0.8.0-1"
+        "com.propensive" %%% "magnolia" % "0.10.0"
       )
     )
     .platformsSettings(JVMPlatform, JSPlatform)(

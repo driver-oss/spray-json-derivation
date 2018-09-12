@@ -9,6 +9,7 @@ class FieldNameTests extends FlatSpec with FormatTests {
   case class C(abA: String)
 
   trait All extends DefaultJsonProtocol with DerivedFormats {
+    implicit val aFormat = jsonFormat[A]
     implicit val bFormat = jsonFormat[B]
     implicit val cFormat = jsonFormat[C]
   }

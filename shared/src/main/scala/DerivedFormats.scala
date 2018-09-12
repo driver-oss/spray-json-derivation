@@ -29,14 +29,16 @@ trait DerivedFormats { self: BasicFormats =>
           val param = ctx.parameters.head
           param.typeclass.write(param.dereference(value))
         } else {
-          val fields: Seq[(String, JsValue)] = ctx.parameters.collect {
-            case param
-                if !param.option || param.dereference(value) != None || printNull =>
-              extractFieldName(param.label) -> param.typeclass.write(
-                param.dereference(value)
-              )
+          val fields: Seq[(String, JsValue)] = ctx.parameters.map { param =>
+            extractFieldName(param.label) -> param.typeclass.write(
+              param.dereference(value)
+            )
           }
-          JsObject(fields: _*)
+          val nullFiltered = fields.filter {
+            case (_, JsNull) => printNull
+            case (_, _)      => true
+          }
+          JsObject(nullFiltered: _*)
         }
 
       override def read(value: JsValue): T = value match {
@@ -48,11 +50,7 @@ trait DerivedFormats { self: BasicFormats =>
           } else {
             ctx.construct { param =>
               val fieldName = extractFieldName(param.label)
-              val fieldValue = if (param.option) {
-                obj.fields.getOrElse(fieldName, JsNull)
-              } else {
-                obj.fields(fieldName)
-              }
+              val fieldValue = obj.fields.getOrElse(fieldName, JsNull)
               param.typeclass.read(fieldValue)
             }
           }
