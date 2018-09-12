@@ -15,8 +15,12 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" && "$TRAVIS_TAG" =~ ^v[0-9].* ]]; then
 
     # Set up publishing settings and credentials
     cat <<EOF > credentials.sbt
-    useGpg in Global := true
-    pgpSigningKey in Global := Some(0x488F99C904F077E8l)
+    credentials in Global += Credentials(
+      "GnuPG Key ID",
+      "gpg",
+      "DC7751D77486D755815C04AB488F99C904F077E8",
+      "ignored"
+    )
     credentials in Global += Credentials(
       "Sonatype Nexus Repository Manager",
       "oss.sonatype.org",
@@ -27,8 +31,8 @@ EOF
 
     # Publish and release
     sbt \
-	+sprayJsonDerivationJVM/publishSigned \
-	+sprayJsonDerivationJS/publishSigned \
-	+sprayJsonDerivationNative/publishSigned \
+	+sprayJsonDerivationJVM/publish \
+	+sprayJsonDerivationJS/publish \
+	+sprayJsonDerivationNative/publish \
 	sonatypeRelease
 fi
